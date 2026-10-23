@@ -1,0 +1,51 @@
+{
+  "example_1_spec_intake": {
+    "method": "POST",
+    "url": "http://localhost:8000/api/policy-requests",
+    "description": "Exact intake request from assignment specification. Resulting premium = ₹225.00.",
+    "body": {
+      "client_request_id": "AGT-2026-0001",
+      "agent_id": "AGENT-17",
+      "customer_name": "Sample Customer",
+      "date_of_birth": "1998-04-10",
+      "destination": "INTERNATIONAL",
+      "trip_start": "2026-11-10",
+      "trip_end": "2026-11-14",
+      "plan_code": "PLUS",
+      "sum_insured": 300000
+    }
+  },
+  "example_2_submit_issuance_success": {
+    "method": "POST",
+    "url": "http://localhost:8000/api/policy-requests/1/submit",
+    "description": "Submit a validated policy to the insurer under the normal SUCCESS scenario.",
+    "body": {
+      "scenario": "SUCCESS"
+    }
+  },
+  "example_3_submit_issuance_timeout": {
+    "method": "POST",
+    "url": "http://localhost:8000/api/policy-requests/2/submit",
+    "description": "Submit a policy simulating TIMEOUT_AFTER_ISSUE. State transitions to PENDING_CONFIRMATION.",
+    "body": {
+      "scenario": "TIMEOUT_AFTER_ISSUE"
+    }
+  },
+  "example_4_reconcile_timeout": {
+    "method": "POST",
+    "url": "http://localhost:8000/api/policy-requests/2/reconcile",
+    "description": "Reconcile provider status for a timed-out policy to safely recover policy_number without duplicate issuance.",
+    "body": {}
+  },
+  "example_5_idempotent_callback": {
+    "method": "POST",
+    "url": "http://localhost:8000/api/mock-insurer/callback",
+    "description": "Simulated insurer callback. Delivering this event_id multiple times is idempotent.",
+    "body": {
+      "event_id": "EVT-MOCK-9999",
+      "event_type": "POLICY_ISSUED",
+      "provider_reference": "PRV-EXAMPLE-01",
+      "policy_number": "POL-INS-20261023-EXAMPLE"
+    }
+  }
+}
