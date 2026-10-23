@@ -465,10 +465,6 @@
                 <a href="{{ route('sandbox') }}" class="nav-item {{ request()->routeIs('sandbox') ? 'active' : '' }}">
                     Reliability Sandbox
                 </a>
-                <div class="system-pill">
-                    <span class="status-dot"></span>
-                    <span>MySQL 8 • PHP 8.2</span>
-                </div>
             </nav>
         </div>
     </header>
