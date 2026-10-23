@@ -4,13 +4,87 @@
 
 @section('styles')
 <style>
-    .detail-grid {
-        display: grid;
-        grid-template-columns: 1fr 1.3fr;
-        gap: 1.75rem;
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
     }
 
-    @media (max-width: 992px) {
+    .page-title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 0.25rem;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--text-heading);
+        letter-spacing: -0.02em;
+    }
+
+    .meta-subtext {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.25rem;
+    }
+
+    .identifiers-box {
+        text-align: right;
+    }
+
+    .id-label {
+        font-size: 0.6875rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .id-value {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--text-heading);
+    }
+
+    /* Action Toolbar */
+    .action-toolbar {
+        background-color: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .action-toolbar-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--text-heading);
+    }
+
+    .action-toolbar-desc {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        margin-top: 0.1rem;
+    }
+
+    /* 2-Column Grid */
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1.35fr;
+        gap: 1.5rem;
+        align-items: start;
+    }
+
+    @media (max-width: 960px) {
         .detail-grid {
             grid-template-columns: 1fr;
         }
@@ -19,184 +93,178 @@
     .info-list {
         display: flex;
         flex-direction: column;
-        gap: 0.85rem;
     }
 
-    .info-item {
+    .info-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding-bottom: 0.65rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        font-size: 0.88rem;
+        padding: 0.7rem 0;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.8125rem;
     }
 
-    .info-item:last-child {
+    .info-row:last-child {
         border-bottom: none;
+    }
+
+    .info-row-label {
+        color: var(--text-muted);
+    }
+
+    .info-row-value {
+        font-weight: 500;
+        color: var(--text-heading);
+    }
+
+    /* Clean Timeline / Activity Log */
+    .activity-stream {
+        position: relative;
+        padding-left: 1.5rem;
+        margin-top: 0.75rem;
+    }
+
+    .activity-stream::before {
+        content: '';
+        position: absolute;
+        top: 6px;
+        bottom: 6px;
+        left: 6px;
+        width: 2px;
+        background-color: var(--border);
+    }
+
+    .activity-node {
+        position: relative;
+        padding-bottom: 1.25rem;
+    }
+
+    .activity-node:last-child {
         padding-bottom: 0;
     }
 
-    .info-label {
-        color: var(--text-muted);
-        font-weight: 500;
-    }
-
-    .info-value {
-        font-weight: 600;
-        color: #fff;
-    }
-
-    /* Timeline */
-    .timeline {
-        position: relative;
-        padding-left: 1.75rem;
-        margin-top: 1rem;
-    }
-
-    .timeline::before {
-        content: '';
+    .node-bullet {
         position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 8px;
-        width: 2px;
-        background: var(--border-light);
-    }
-
-    .timeline-item {
-        position: relative;
-        margin-bottom: 1.5rem;
-    }
-
-    .timeline-item:last-child {
-        margin-bottom: 0;
-    }
-
-    .timeline-marker {
-        position: absolute;
-        left: -1.75rem;
-        top: 2px;
-        width: 18px;
-        height: 18px;
+        left: -1.5rem;
+        top: 4px;
+        width: 14px;
+        height: 14px;
         border-radius: 50%;
-        background: var(--bg-card);
-        border: 2px solid var(--primary);
-        box-shadow: 0 0 0 3px var(--bg-body);
+        background-color: #ffffff;
+        border: 2px solid var(--text-muted);
     }
 
-    .timeline-marker.issued {
-        border-color: var(--success);
-        background: var(--success);
+    .node-bullet.issued {
+        border-color: #10b981;
+        background-color: #10b981;
     }
 
-    .timeline-marker.failed {
-        border-color: var(--danger);
-        background: var(--danger);
+    .node-bullet.failed {
+        border-color: #ef4444;
+        background-color: #ef4444;
     }
 
-    .timeline-content {
-        background: var(--bg-input);
-        padding: 0.85rem 1rem;
+    .node-bullet.submitted {
+        border-color: #6366f1;
+        background-color: #6366f1;
+    }
+
+    .node-bullet.pending {
+        border-color: #f59e0b;
+        background-color: #f59e0b;
+    }
+
+    .node-content {
+        background-color: var(--bg-subtle);
+        border: 1px solid var(--border);
         border-radius: var(--radius-sm);
-        border: 1px solid var(--border);
+        padding: 0.65rem 0.85rem;
     }
 
-    .timeline-title {
-        font-size: 0.88rem;
-        font-weight: 700;
+    .node-title {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--text-heading);
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.25rem;
+        gap: 0.35rem;
     }
 
-    .timeline-time {
-        font-size: 0.72rem;
-        color: var(--text-dim);
-    }
-
-    .timeline-meta {
-        margin-top: 0.45rem;
-        font-size: 0.76rem;
+    .node-meta {
+        font-size: 0.75rem;
         color: var(--text-muted);
-        background: rgba(0, 0, 0, 0.25);
-        padding: 0.4rem 0.6rem;
-        border-radius: 4px;
-        word-break: break-all;
+        margin-top: 0.2rem;
     }
 
-    .action-panel {
-        background: var(--bg-card);
+    .node-payload {
+        margin-top: 0.45rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        background-color: #ffffff;
         border: 1px solid var(--border);
-        border-radius: var(--radius-md);
-        padding: 1.25rem;
-        margin-bottom: 1.75rem;
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
+        border-radius: 4px;
+        padding: 0.4rem 0.6rem;
+        word-break: break-all;
     }
 </style>
 @endsection
 
 @section('content')
-<!-- Header & Status -->
-<div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+<!-- Header -->
+<div class="page-header">
     <div>
-        <a href="{{ route('dashboard') }}" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600;">← Back to Dashboard</a>
-        <div style="display: flex; align-items: center; gap: 0.75rem; margin-top: 0.35rem;">
-            <h2 style="font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em;">{{ $policy->client_request_id }}</h2>
+        <a href="{{ route('dashboard') }}" style="color: var(--text-muted); text-decoration: none; font-size: 0.8125rem;">← Back to policies</a>
+        <div class="page-title-row">
+            <h1 class="page-title mono">{{ $policy->client_request_id }}</h1>
             @if($policy->status === 'ISSUED')
-                <span class="badge badge-issued" style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">● ISSUED</span>
+                <span class="badge badge-issued"><span class="badge-dot"></span>ISSUED</span>
             @elseif($policy->status === 'VALIDATED')
-                <span class="badge badge-validated" style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">● VALIDATED</span>
+                <span class="badge badge-validated"><span class="badge-dot"></span>VALIDATED</span>
             @elseif($policy->status === 'SUBMITTED')
-                <span class="badge badge-submitted" style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">● SUBMITTED</span>
+                <span class="badge badge-submitted"><span class="badge-dot"></span>SUBMITTED</span>
             @elseif(in_array($policy->status, ['PENDING_CONFIRMATION', 'NEEDS_RECONCILIATION']))
-                <span class="badge badge-pending" style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">● {{ $policy->status }}</span>
+                <span class="badge badge-pending"><span class="badge-dot"></span>{{ $policy->status }}</span>
             @elseif($policy->status === 'FAILED')
-                <span class="badge badge-failed" style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">● FAILED</span>
+                <span class="badge badge-failed"><span class="badge-dot"></span>FAILED</span>
             @else
-                <span class="badge badge-received" style="font-size: 0.82rem; padding: 0.35rem 0.75rem;">● {{ $policy->status }}</span>
+                <span class="badge badge-received"><span class="badge-dot"></span>{{ $policy->status }}</span>
             @endif
         </div>
-        <div class="mono" style="color: var(--text-dim); font-size: 0.78rem; margin-top: 0.25rem;">
-            UUID: {{ $policy->uuid }} • Created: {{ $policy->created_at?->format('Y-m-d H:i:s') }}
+        <div class="meta-subtext mono">
+            UUID: {{ $policy->uuid }} • Created {{ $policy->created_at?->format('Y-m-d H:i:s') }}
         </div>
     </div>
 
-    <!-- Quick Identifiers -->
-    <div style="text-align: right;">
+    <div class="identifiers-box">
         @if($policy->policy_number)
-            <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #34d399;">Official Policy Number</div>
-            <div class="mono" style="font-size: 1.25rem; font-weight: 800; color: #34d399;">{{ $policy->policy_number }}</div>
+            <div class="id-label" style="color: #065f46;">Confirmed Policy Number</div>
+            <div class="id-value mono" style="color: #065f46;">{{ $policy->policy_number }}</div>
         @elseif($policy->provider_reference)
-            <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted);">Provider Reference</div>
-            <div class="mono" style="font-size: 1.05rem; font-weight: 700; color: #fff;">{{ $policy->provider_reference }}</div>
+            <div class="id-label">Provider Reference</div>
+            <div class="id-value mono">{{ $policy->provider_reference }}</div>
         @endif
     </div>
 </div>
 
-<!-- Operational Actions Bar -->
-<div class="action-panel">
+<!-- Workflow Action Bar -->
+<div class="action-toolbar">
     <div>
-        <strong style="font-size: 0.95rem;">Workflow Actions</strong>
-        <p style="font-size: 0.78rem; color: var(--text-muted);">Trigger insurer submission, test mock failure scenarios, or reconcile provider status.</p>
+        <div class="action-toolbar-title">Lifecycle Actions</div>
+        <div class="action-toolbar-desc">Execute insurer submission, simulate edge scenarios, or trigger status reconciliation.</div>
     </div>
 
-    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+    <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
         @if($policy->status !== 'ISSUED')
-            <!-- Submit form with scenario choice -->
             <form method="POST" action="{{ route('policies.submit', $policy->id) }}" style="display: flex; gap: 0.5rem; align-items: center;">
                 @csrf
-                <select name="scenario" class="form-control" style="padding: 0.45rem 0.75rem; font-size: 0.82rem; width: auto;">
-                    <option value="SUCCESS">Scenario: SUCCESS (Normal)</option>
-                    <option value="TEMPORARY_FAILURE">Scenario: TEMPORARY_FAILURE</option>
-                    <option value="TIMEOUT_AFTER_ISSUE">Scenario: TIMEOUT_AFTER_ISSUE</option>
-                    <option value="DELAYED_CALLBACK">Scenario: DELAYED_CALLBACK</option>
+                <select name="scenario" class="form-select" style="height: 36px; padding: 0.35rem 0.65rem; font-size: 0.8125rem; width: auto;">
+                    <option value="SUCCESS">Scenario: SUCCESS</option>
+                    <option value="TEMPORARY_FAILURE">Scenario: TEMPORARY_FAILURE (503)</option>
+                    <option value="TIMEOUT_AFTER_ISSUE">Scenario: TIMEOUT_AFTER_ISSUE (504)</option>
+                    <option value="DELAYED_CALLBACK">Scenario: DELAYED_CALLBACK (202)</option>
                 </select>
-                <button type="submit" class="btn btn-primary btn-sm">
+                <button type="submit" class="btn btn-primary btn-sm" style="height: 36px;">
                     Submit to Insurer →
                 </button>
             </form>
@@ -204,147 +272,137 @@
             @if(in_array($policy->status, ['PENDING_CONFIRMATION', 'NEEDS_RECONCILIATION', 'FAILED']))
                 <form method="POST" action="{{ route('policies.reconcile', $policy->id) }}">
                     @csrf
-                    <button type="submit" class="btn btn-warning btn-sm">
-                        🔄 Reconcile Status
+                    <button type="submit" class="btn btn-warning btn-sm" style="height: 36px;">
+                        Reconcile Provider Status
                     </button>
                 </form>
             @endif
         @else
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: #34d399; font-weight: 600; font-size: 0.88rem;">
-                <span>✓ Policy is final and immutable. No further transitions permitted.</span>
+            <div style="font-size: 0.8125rem; font-weight: 500; color: #065f46; background-color: #ecfdf5; border: 1px solid #a7f3d0; padding: 0.4rem 0.75rem; border-radius: var(--radius-sm);">
+                Policy finalized and issued. State is terminal and immutable.
             </div>
         @endif
     </div>
 </div>
 
+<!-- Detail Columns -->
 <div class="detail-grid">
-    <!-- Left Column: Policy Overview & Pricing -->
-    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
-        <!-- Policy Data Card -->
-        <div class="card">
-            <div class="card-header">
-                <span class="card-title">Policy Details</span>
-                <span class="mono" style="font-size: 0.75rem; color: var(--text-dim);">Agent: {{ $policy->agent_id }}</span>
+    <!-- Left Column: Specs & Financials -->
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <!-- Policy Specification Card -->
+        <div class="card card-padded">
+            <div class="card-title" style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);">
+                Policy Specifications
             </div>
 
             <div class="info-list">
-                <div class="info-item">
-                    <span class="info-label">Customer Name</span>
-                    <span class="info-value">{{ $policy->customer_name }}</span>
+                <div class="info-row">
+                    <span class="info-row-label">Customer Name</span>
+                    <span class="info-row-value">{{ $policy->customer_name }}</span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Date of Birth</span>
-                    <span class="info-value mono">{{ $policy->date_of_birth?->format('Y-m-d') }}</span>
+                <div class="info-row">
+                    <span class="info-row-label">Date of Birth</span>
+                    <span class="info-row-value mono">{{ $policy->date_of_birth?->format('Y-m-d') }}</span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Destination</span>
-                    <span class="info-value">{{ $policy->destination }}</span>
+                <div class="info-row">
+                    <span class="info-row-label">Destination</span>
+                    <span class="info-row-value">{{ $policy->destination }}</span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Trip Dates</span>
-                    <span class="info-value mono">
+                <div class="info-row">
+                    <span class="info-row-label">Trip Schedule</span>
+                    <span class="info-row-value mono">
                         {{ $policy->trip_start?->format('Y-m-d') }} to {{ $policy->trip_end?->format('Y-m-d') }}
                     </span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Travel Days (inclusive)</span>
-                    <span class="info-value">{{ $policy->travel_days }} days</span>
+                <div class="info-row">
+                    <span class="info-row-label">Travel Days</span>
+                    <span class="info-row-value">{{ $policy->travel_days }} days (inclusive)</span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Plan Code</span>
-                    <span class="info-value mono" style="color: #a5b4fc;">{{ $policy->plan_code }}</span>
+                <div class="info-row">
+                    <span class="info-row-label">Plan Tier</span>
+                    <span class="info-row-value mono" style="font-weight: 600;">{{ $policy->plan_code }}</span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Sum Insured (Coverage)</span>
-                    <span class="info-value mono">₹{{ number_format($policy->sum_insured) }}</span>
+                <div class="info-row">
+                    <span class="info-row-label">Sum Insured</span>
+                    <span class="info-row-value mono">₹{{ number_format($policy->sum_insured) }}</span>
                 </div>
-                <div class="info-item">
-                    <span class="info-label">Provider Reference</span>
-                    <span class="info-value mono">{{ $policy->provider_reference ?: '—' }}</span>
+                <div class="info-row">
+                    <span class="info-row-label">Agent ID</span>
+                    <span class="info-row-value mono">{{ $policy->agent_id }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- Immutable Pricing Snapshot Card -->
-        <div class="card">
-            <div class="card-header">
-                <span class="card-title">Immutable Premium Snapshot</span>
-                <span class="badge badge-validated">Locked</span>
+        <!-- Immutable Financial Snapshot -->
+        <div class="card card-padded">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <div class="card-title">Accepted Premium Snapshot</div>
+                <span class="badge badge-validated">Immutable</span>
             </div>
 
-            <div style="text-align: center; padding: 1.25rem 0; border-bottom: 1px solid var(--border);">
-                <div style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Calculated Final Premium</div>
-                <div style="font-size: 2.2rem; font-weight: 800; color: #34d399; letter-spacing: -0.02em;">
+            <div style="background-color: var(--bg-subtle); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 1rem; text-align: center;">
+                <div style="font-size: 0.75rem; text-transform: uppercase; font-weight: 600; color: var(--text-muted); letter-spacing: 0.05em;">Final Calculated Premium</div>
+                <div class="mono" style="font-size: 2rem; font-weight: 700; color: var(--text-heading); margin-top: 0.25rem;">
                     ₹{{ number_format($policy->calculated_premium, 2) }}
                 </div>
-                <div class="mono" style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem;">
-                    Decimal-Safe `bcmath` computation snapshot
-                </div>
-            </div>
-
-            <div class="info-list" style="margin-top: 1rem;">
-                <div class="info-item">
-                    <span class="info-label">Formula</span>
-                    <span class="info-value mono" style="font-size: 0.8rem;">Rate × Days × Age × Dest × Cov</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Snapshot Created At</span>
-                    <span class="info-value mono" style="font-size: 0.8rem;">{{ $policy->created_at?->format('Y-m-d H:i:s') }}</span>
+                <div class="mono" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">
+                    Computed via decimal-safe bcmath
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Right Column: Audit Trail, Attempts, Events -->
-    <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+    <div style="display: flex; flex-direction: column; gap: 1.25rem;">
         <!-- State Machine Transition Audit Trail -->
-        <div class="card">
-            <div class="card-header">
-                <span class="card-title">State Machine Audit Trail</span>
-                <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">{{ $policy->stateHistory->count() }} transitions</span>
+        <div class="card card-padded">
+            <div class="card-title" style="margin-bottom: 0.5rem;">
+                State Machine Audit Trail ({{ $policy->stateHistory->count() }})
             </div>
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+                Complete ledger of state transitions with triggers and context.
+            </p>
 
-            <div class="timeline">
+            <div class="activity-stream">
                 @forelse($policy->stateHistory as $h)
-                    <div class="timeline-item">
-                        <div class="timeline-marker {{ strtolower($h->to_state) }}"></div>
-                        <div class="timeline-content">
-                            <div class="timeline-title">
-                                <span class="mono" style="color: var(--text-muted); font-size: 0.78rem;">{{ $h->from_state }}</span>
-                                <span style="color: var(--text-dim);">→</span>
-                                <strong style="color: #fff;">{{ $h->to_state }}</strong>
+                    <div class="activity-node">
+                        <div class="node-bullet {{ strtolower($h->to_state) }}"></div>
+                        <div class="node-content">
+                            <div class="node-title">
+                                <span class="mono" style="color: var(--text-muted); font-size: 0.75rem;">{{ $h->from_state }}</span>
+                                <span style="color: var(--text-subtle);">→</span>
+                                <span style="font-weight: 600;">{{ $h->to_state }}</span>
                             </div>
-                            <div class="timeline-time">
-                                Trigger: <strong class="mono" style="color: #a5b4fc;">{{ $h->trigger }}</strong> • {{ $h->created_at?->format('Y-m-d H:i:s') }}
+                            <div class="node-meta mono">
+                                Trigger: <strong>{{ $h->trigger }}</strong> • {{ $h->created_at?->format('H:i:s, M d') }}
                             </div>
                             @if($h->metadata)
-                                <div class="timeline-meta mono">
+                                <div class="node-payload">
                                     {{ $h->metadata }}
                                 </div>
                             @endif
                         </div>
                     </div>
                 @empty
-                    <p style="color: var(--text-muted); font-size: 0.85rem;">No state history recorded yet.</p>
+                    <div style="font-size: 0.8125rem; color: var(--text-muted);">No state transitions recorded.</div>
                 @endforelse
             </div>
         </div>
 
-        <!-- Issuance Attempts Log -->
-        <div class="card">
+        <!-- Issuance Attempts -->
+        <div class="card" style="overflow: hidden;">
             <div class="card-header">
-                <span class="card-title">Insurer Issuance Attempts</span>
-                <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">{{ $policy->issuanceAttempts->count() }} total attempts</span>
+                <div class="card-title">Submission Attempts ({{ $policy->issuanceAttempts->count() }})</div>
             </div>
 
             @if($policy->issuanceAttempts->isNotEmpty())
-                <div class="table-responsive">
-                    <table>
+                <div class="table-container">
+                    <table class="data-table">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Scenario</th>
-                                <th>Status Code</th>
+                                <th>HTTP Code</th>
                                 <th>Provider Ref</th>
                                 <th>Time</th>
                             </tr>
@@ -353,7 +411,7 @@
                             @foreach($policy->issuanceAttempts as $att)
                                 <tr>
                                     <td class="mono"><strong>#{{ $att->attempt_number }}</strong></td>
-                                    <td><span class="mono" style="font-size: 0.8rem;">{{ $att->scenario }}</span></td>
+                                    <td class="mono" style="font-size: 0.78rem;">{{ $att->scenario }}</td>
                                     <td>
                                         @if($att->response_status == '200')
                                             <span class="badge badge-issued">200 OK</span>
@@ -373,34 +431,35 @@
                     </table>
                 </div>
             @else
-                <p style="color: var(--text-muted); font-size: 0.85rem;">No submission attempts made yet. Click "Submit to Insurer" above to trigger issuance.</p>
+                <div style="padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.8125rem;">
+                    No insurer submission attempts made yet.
+                </div>
             @endif
         </div>
 
-        <!-- Provider Callback Events Log -->
-        <div class="card">
+        <!-- Provider Callback Events -->
+        <div class="card" style="overflow: hidden;">
             <div class="card-header">
-                <span class="card-title">Provider Events & Callbacks</span>
-                <span class="mono" style="font-size: 0.75rem; color: var(--text-muted);">{{ $policy->providerEvents->count() }} received</span>
+                <div class="card-title">Provider Webhook Events ({{ $policy->providerEvents->count() }})</div>
             </div>
 
             @if($policy->providerEvents->isNotEmpty())
-                <div class="table-responsive">
-                    <table>
+                <div class="table-container">
+                    <table class="data-table">
                         <thead>
                             <tr>
                                 <th>Event ID</th>
-                                <th>Type</th>
-                                <th>Processed</th>
+                                <th>Event Type</th>
+                                <th>Status</th>
                                 <th>Policy #</th>
-                                <th>Received At</th>
+                                <th>Received</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($policy->providerEvents as $evt)
                                 <tr>
-                                    <td class="mono" style="font-weight: 700;">{{ $evt->event_id }}</td>
-                                    <td class="mono">{{ $evt->event_type }}</td>
+                                    <td class="mono" style="font-weight: 600; font-size: 0.78rem;">{{ $evt->event_id }}</td>
+                                    <td class="mono" style="font-size: 0.78rem;">{{ $evt->event_type }}</td>
                                     <td>
                                         @if($evt->processed)
                                             <span class="badge badge-issued">Processed</span>
@@ -408,7 +467,7 @@
                                             <span class="badge badge-pending">Pending</span>
                                         @endif
                                     </td>
-                                    <td class="mono" style="font-size: 0.78rem; color: #34d399;">{{ $evt->policy_number ?: '—' }}</td>
+                                    <td class="mono" style="font-size: 0.78rem;">{{ $evt->policy_number ?: '—' }}</td>
                                     <td class="mono" style="font-size: 0.75rem; color: var(--text-muted);">{{ $evt->created_at?->format('H:i:s') }}</td>
                                 </tr>
                             @endforeach
@@ -416,7 +475,9 @@
                     </table>
                 </div>
             @else
-                <p style="color: var(--text-muted); font-size: 0.85rem;">No asynchronous callbacks received for this policy.</p>
+                <div style="padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.8125rem;">
+                    No asynchronous provider callbacks received for this policy.
+                </div>
             @endif
         </div>
     </div>
