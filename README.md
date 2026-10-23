@@ -89,7 +89,10 @@ stateDiagram-v2
 Implemented using PHP's **`bcmath` extension** with scale 4 and standard half-up rounding to 2 decimal places.
 
 ### Formula
-$$\text{Premium} = \text{base\_daily\_rate} \times \text{travel\_days} \times \text{age\_multiplier} \times \text{destination\_multiplier} \times \text{coverage\_multiplier}$$
+
+```text
+premium = base_daily_rate × travel_days × age_multiplier × destination_multiplier × coverage_multiplier
+```
 
 ### Pricing Rules Matrix
 
@@ -107,7 +110,7 @@ $$\text{Premium} = \text{base\_daily\_rate} \times \text{travel\_days} \times \t
 | **Sum Insured** | ₹100,000 | 1.00x |
 | | ₹300,000 | 1.25x |
 | | ₹500,000 | 1.50x |
-| **Travel Days** | Inclusive | $\text{trip\_end} - \text{trip\_start} + 1$ (minimum 1) |
+| **Travel Days** | Inclusive | `trip_end - trip_start + 1` (minimum 1) |
 
 ### Specification Example Verification
 - **Input**: `client_request_id`: `AGT-2026-0001`, `agent_id`: `AGENT-17`, DOB: `1998-04-10`, `destination`: `INTERNATIONAL`, `trip_start`: `2026-11-10`, `trip_end`: `2026-11-14`, `plan_code`: `PLUS`, `sum_insured`: `300000`.
@@ -117,7 +120,7 @@ $$\text{Premium} = \text{base\_daily\_rate} \times \text{travel\_days} \times \t
   - `base_daily_rate` = ₹20.00
   - `destination_multiplier` = 1.80
   - `coverage_multiplier` = 1.25
-  - $\text{Premium} = 20 \times 5 \times 1.00 \times 1.80 \times 1.25 = \mathbf{₹225.00}$ (Verified in automated unit test `PremiumCalculatorTest`).
+  - **Calculated Premium**: `20 × 5 × 1.00 × 1.80 × 1.25` = **₹225.00** (Verified in automated unit test `PremiumCalculatorTest`).
 
 ---
 
