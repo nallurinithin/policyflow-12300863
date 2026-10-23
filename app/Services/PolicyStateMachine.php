@@ -34,13 +34,6 @@ class PolicyStateMachine
 
     /**
      * Transition a policy request to a new state and record the audit history.
-     *
-     * @param PolicyRequest $request The policy request to transition
-     * @param string $toState Target state
-     * @param string $trigger What initiated this transition (e.g., 'API_INTAKE', 'INSURER_CALLBACK', 'RETRY')
-     * @param array $metadata Additional context to record in audit log
-     * @return PolicyRequest
-     * @throws IllegalStateTransitionException
      */
     public function transition(
         PolicyRequest $request,
@@ -48,38 +41,36 @@ class PolicyStateMachine
         string $trigger,
         array $metadata = []
     ): PolicyRequest {
-        $fromState = $request->status;
-
-        // If target is identical, it's a no-op idempotent call
-        if ($fromState === $toState) {
-            return $request;
-        }
-
-        if (!$this->canTransition($fromState, $toState)) {
-            $reason = ($fromState === 'ISSUED')
-                ? "Policies in ISSUED state are immutable and cannot be altered."
-                : "Transition not permitted by state machine workflow.";
-            throw new IllegalStateTransitionException($fromState, $toState, $reason);
-        }
-
-        return DB::transaction(function () use ($request, $fromState, $toState, $trigger, $metadata) {
-            // Lock request record for update if persisted
+        return DB::transaction(function () use ($request, $toState, $trigger, $metadata) {
             if ($request->exists) {
+                // Lock request record for update
                 $lockedRequest = PolicyRequest::where('id', $request->id)->lockForUpdate()->first();
                 $fromState = $lockedRequest->status;
 
-                // Re-verify after acquiring pessimistic lock
+                // If target is identical, idempotent no-op
                 if ($fromState === $toState) {
-                    return $lockedRequest;
+                    $request->status = $toState;
+                    return $request;
                 }
-                if (!$this->canTransition($fromState, $toState)) {
-                    throw new IllegalStateTransitionException($fromState, $toState, "Transition state changed concurrently.");
-                }
-                $request = $lockedRequest;
-            }
 
-            $request->status = $toState;
-            $request->save();
+                if (!$this->canTransition($fromState, $toState)) {
+                    $reason = ($fromState === 'ISSUED')
+                        ? "Policies in ISSUED state are immutable and cannot be altered."
+                        : "Transition not permitted by state machine workflow.";
+                    throw new IllegalStateTransitionException($fromState, $toState, $reason);
+                }
+
+                $lockedRequest->status = $toState;
+                $lockedRequest->save();
+                $request->status = $toState;
+            } else {
+                $fromState = $request->status;
+                if ($fromState !== $toState && !$this->canTransition($fromState, $toState)) {
+                    throw new IllegalStateTransitionException($fromState, $toState, "Transition not permitted.");
+                }
+                $request->status = $toState;
+                $request->save();
+            }
 
             PolicyStateHistory::create([
                 'policy_request_id' => $request->id,
